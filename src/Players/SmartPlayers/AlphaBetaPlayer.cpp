@@ -27,7 +27,7 @@ const Action ABPlayer::chooseAction(const MoveSet* possibleMoves, const Board* b
     int         beta        = EVAL_MAX_SCORE;
     int         score;
     int         bestScore   = EVAL_MIN_SCORE;
-    Move*       bestMove;
+    Move*       bestMove    = nullptr;
     
     int DEBUGGING_numPositionsEvaluated = 0;
 
@@ -38,11 +38,9 @@ const Action ABPlayer::chooseAction(const MoveSet* possibleMoves, const Board* b
         boardClone->undoMove();
       
         if ( score > bestScore ) {
-         
             bestScore   = score;
             bestMove    = move;
             alpha       = std::max(alpha, score);
-            
         }
         
         if ( score >= beta ) {
@@ -58,24 +56,25 @@ const Action ABPlayer::chooseAction(const MoveSet* possibleMoves, const Board* b
 }
 
 // adapted from chessprogramming.org/Alpha-Beta
-int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, Colour clr, int* DEBUGGING_numNodesEvaluated) const {
+// crucially: MIN(-a,-b) = -MAX(a,b)
+// and:       MAX(-a,-b) = -MIN(a,b)
+int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, Colour playerClr, int* DEBUGGING_numNodesEvaluated) const {
    
     int         score;
     int         bestScore   = EVAL_MIN_SCORE;
-    MoveSet*    moves       = board->calcLegalMoves(clr);
-    if ( depthRemaining == 0 ) return evaluateBoardScore(board);
+    MoveSet*    moves       = board->calcLegalMoves(playerClr);
+    if ( depthRemaining == 0 ) return evaluateBoardScore(board, playerClr);
 
 
     for (Move* move : moves->getMoves())  {
         
         (*DEBUGGING_numNodesEvaluated)++;
 
-        board->applyMove(move, clr);
-        score = -1 * alphaBeta( -beta, -alpha, depthRemaining - 1, board, getOppositeColour(clr), DEBUGGING_numNodesEvaluated);
+        board->applyMove(move, playerClr);
+        score = -1 * alphaBeta( -beta, -alpha, depthRemaining - 1, board, getOppositeColour(playerClr), DEBUGGING_numNodesEvaluated);
         board->undoMove();
       
         if ( score > bestScore ) {
-         
             bestScore   = score;
             alpha       = std::max(alpha, score);
         }
@@ -91,11 +90,13 @@ int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, C
 }
 
 // TODO: make this function relative to the player calling it.
-int ABPlayer::evaluateBoardScore(Board* board) const {
+int ABPlayer::evaluateBoardScore(Board* board, Colour playerColour) const {
     
     int             score = 0;
     const Piece*    piece;
     int             sign;
+
+    // WANT TO KNOW IF THE KING IS IN CHECKMATE!!! NEED A FUNCTION
     
     for (int i = 0; i < NUM_SQUARES_ON_BOARD; i++) {
         
