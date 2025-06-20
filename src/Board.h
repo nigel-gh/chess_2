@@ -10,6 +10,7 @@
 #include "TypesAndEnums.h"
 #include "Move.h"
 #include "Pieces/Piece.h"
+#include "CStack.h"
 
 #include <string>
 #include <vector>
@@ -29,6 +30,8 @@ private:
    unsigned int   fiftyMoveRuleStack[MAX_NUM_MOVES_IN_GAME];
    BoardPieceMap* pieceAtSquareMap; // hash where key is board index, value is list of pieces that exist there or have been captured
    MoveStack      moveStack;
+   CStack<bool, 512> whiteKingInCheckStack;
+   CStack<bool, 512> blackKingInCheckStack;
    void        setKingPos(Colour, int);
    void        incrementFiftyMoveRuleCounter();
    void        decrementFiftyMoveRuleCounter();
@@ -62,6 +65,7 @@ public:
    bool           squaresAreEnemies(int, int)      const;
    bool           kingInCheck(Colour)              const;
    Board*         clone()                          const;
+   SquarePiecePairSet&        getPlayerPieces(Colour);
 };
 
 #endif

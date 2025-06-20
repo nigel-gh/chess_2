@@ -8,11 +8,14 @@
 #include "Players/SmartPlayers/AlphaBetaPlayer.h"
 
 
+#include "CStack.h"
+
+
 
 int main() {
 
     Game game = Game(new ABPlayer(WHITE, 5), new ABPlayer(BLACK, 5));
     game.play();
     return 0;
-    
+
 }
