@@ -27,7 +27,7 @@ const Action ABPlayer::chooseAction(const MoveSet* possibleMoves, const Board* b
     int         beta        = EVAL_MAX_SCORE;
     int         score;
     int         bestScore   = EVAL_MIN_SCORE;
-    Move*       bestMove;
+    Move*       bestMove    = nullptr;
     
     int DEBUGGING_numPositionsEvaluated = 0;
 
@@ -40,11 +40,9 @@ const Action ABPlayer::chooseAction(const MoveSet* possibleMoves, const Board* b
         boardClone->undoMove();
       
         if ( score > bestScore ) {
-         
             bestScore   = score;
             bestMove    = move;
             alpha       = std::max(alpha, score);
-            
         }
         
         if ( score >= beta ) {
@@ -60,28 +58,25 @@ const Action ABPlayer::chooseAction(const MoveSet* possibleMoves, const Board* b
 }
 
 // adapted from chessprogramming.org/Alpha-Beta
-int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, Colour clr, int* DEBUGGING_numNodesEvaluated) const {
+// crucially: MIN(-a,-b) = -MAX(a,b)
+// and:       MAX(-a,-b) = -MIN(a,b)
+int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, Colour playerClr, int* DEBUGGING_numNodesEvaluated) const {
    
     int         score;
     int         bestScore   = EVAL_MIN_SCORE;
-    MoveSet*    moves       = board->calcLegalMoves(clr);
-    // Termination condition
-    if ( depthRemaining == 0 ) {
-        int sign = clr == WHITE ? 1 : -1;
-        return sign * board->evaluateLeafPositionScore(clr);
-    }
+    MoveSet*    moves       = board->calcLegalMoves(playerClr);
+    if ( depthRemaining == 0 ) return evaluateBoardScore(board, playerClr);
+
 
     for (Move* move : moves->getMoves())  {
         
         (*DEBUGGING_numNodesEvaluated)++;
 
-        board->applyMove(move, clr);
-        // since -min(-a, -b) = max(a, b)
-        score = -1 * alphaBeta( -beta, -alpha, depthRemaining - 1, board, getOppositeColour(clr), DEBUGGING_numNodesEvaluated);
+        board->applyMove(move, playerClr);
+        score = -1 * alphaBeta( -beta, -alpha, depthRemaining - 1, board, getOppositeColour(playerClr), DEBUGGING_numNodesEvaluated);
         board->undoMove();
       
         if ( score > bestScore ) {
-         
             bestScore   = score;
             alpha       = std::max(alpha, score);
         }
