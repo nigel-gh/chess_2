@@ -7,12 +7,12 @@
 #include "Players/SmartPlayers/BruteForcePlayer.h"
 #include "Players/SmartPlayers/AlphaBetaPlayer.h"
 
-
-
 int main() {
 
-    Game game = Game(new ABPlayer(WHITE, 5), new ABPlayer(BLACK, 5));
+    // Game game = Game(new RandomPlayer(WHITE), new ABPlayer(BLACK, 2));
+    Game game = Game(new ABPlayer(WHITE, 2), new RandomPlayer(BLACK));
     game.play();
-    return 0;
     
+    return 0;
+
 }

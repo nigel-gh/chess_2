@@ -62,6 +62,8 @@ public:
    bool           squaresAreEnemies(int, int)      const;
    bool           kingInCheck(Colour)              const;
    Board*         clone()                          const;
+   SquarePiecePairSet& getPlayerPieces(Colour);
+   int            evaluateLeafPositionScore(Colour); //const
 };
 
 #endif

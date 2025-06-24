@@ -34,7 +34,9 @@ const Action ABPlayer::chooseAction(const MoveSet* possibleMoves, const Board* b
     for (Move* move : moves->getMoves())  {
         
         boardClone->applyMove(move, clr);
+
         score = -1 * alphaBeta( -beta, -alpha, maxSearchDepth - 1, boardClone, getOppositeColour(clr), &DEBUGGING_numPositionsEvaluated);
+
         boardClone->undoMove();
       
         if ( score > bestScore ) {
@@ -52,7 +54,7 @@ const Action ABPlayer::chooseAction(const MoveSet* possibleMoves, const Board* b
     
     bestMove = bestMove->clone();
     delete moves;
-
+    std::cout << "AlphaBetaPlayer.cpp::chooseAction()::debugging, searched " << DEBUGGING_numPositionsEvaluated << " positions\n";
     return Action(ActionType::MOVE, bestMove);
     
 }
@@ -63,14 +65,18 @@ int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, C
     int         score;
     int         bestScore   = EVAL_MIN_SCORE;
     MoveSet*    moves       = board->calcLegalMoves(clr);
-    if ( depthRemaining == 0 ) return evaluateBoardScore(board);
-
+    // Termination condition
+    if ( depthRemaining == 0 ) {
+        int sign = clr == WHITE ? 1 : -1;
+        return sign * board->evaluateLeafPositionScore(clr);
+    }
 
     for (Move* move : moves->getMoves())  {
         
         (*DEBUGGING_numNodesEvaluated)++;
 
         board->applyMove(move, clr);
+        // since -min(-a, -b) = max(a, b)
         score = -1 * alphaBeta( -beta, -alpha, depthRemaining - 1, board, getOppositeColour(clr), DEBUGGING_numNodesEvaluated);
         board->undoMove();
       
@@ -80,7 +86,7 @@ int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, C
             alpha       = std::max(alpha, score);
         }
         
-        if( score >= beta ) {
+        if ( score >= beta ) {
             delete moves;
             return bestScore;   //  fail soft beta-cutoff, existing the loop here is also fine  
         } 
@@ -90,28 +96,28 @@ int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, C
     return bestScore;
 }
 
-// TODO: make this function relative to the player calling it.
-int ABPlayer::evaluateBoardScore(Board* board) const {
+// // TODO: make this function relative to the player calling it.
+// int ABPlayer::evaluateBoardScore(Board* board) const {
     
-    int             score = 0;
-    const Piece*    piece;
-    int             sign;
+//     int             score = 0;
+//     const Piece*    piece;
+//     int             sign;
     
-    for (int i = 0; i < NUM_SQUARES_ON_BOARD; i++) {
+//     for (int i = 0; i < NUM_SQUARES_ON_BOARD; i++) {
         
-        piece = board->getPieceAtPos(i);
+//         piece = board->getPieceAtPos(i);
         
-        if (piece == nullptr) {
-            continue;
-        }
+//         if (piece == nullptr) {
+//             continue;
+//         }
         
-        sign = - 1 * (piece->getColour() * 2 - 1);
-        score += PIECE_VALUES[piece->getPieceType()] * sign;
+//         sign = - 1 * (piece->getColour() * 2 - 1);
+//         score += PIECE_VALUES[piece->getPieceType()] * sign;
         
-    }
+//     }
     
-    return score;
-}
+//     return score;
+// }
 
 Player* ABPlayer::clone() const {
     return new ABPlayer(getColour(), maxSearchDepth);

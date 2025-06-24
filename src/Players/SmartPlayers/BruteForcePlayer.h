@@ -18,7 +18,7 @@ class BruteForcePlayer : public Player {
 private:
     int maxSearchDepth;
     int getMoveScoreRecursively(int, Board*, Colour, int*) const;
-    int evaluateBoardScore(Board*) const;
+    // int evaluateBoardScore(Board*, Colour) const;
 public:
     BruteForcePlayer();
     BruteForcePlayer(Colour);

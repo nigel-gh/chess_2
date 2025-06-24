@@ -73,7 +73,7 @@ MoveSet* Board::calcLegalMoves(Colour colour) {
     
     MoveSet* legalMoves = new MoveSet();
     MoveSet* pieceLegalMoves;
-    SquarePiecePairSet squarePiecePairs = pieceAtSquareMap->getPlayerPieces(colour);
+    SquarePiecePairSet squarePiecePairs = getPlayerPieces(colour);
     
     for (const SquarePiecePair& pair : squarePiecePairs) {
         
@@ -447,4 +447,46 @@ Board::Board(
         _fiftyMoveRule + MAX_NUM_MOVES_IN_GAME,
         fiftyMoveRuleStack
     );
+}
+
+SquarePiecePairSet& Board::getPlayerPieces(Colour clr) {
+    return pieceAtSquareMap->getPlayerPieces(clr);
+}
+
+int Board::evaluateLeafPositionScore(Colour clrToMove) {
+    
+    int          score = 0;
+    const Piece* piece;
+    SquarePiecePairSet& whitePieces = getPlayerPieces(WHITE);
+    SquarePiecePairSet& blackPieces = getPlayerPieces(BLACK);
+
+    constexpr int CHECKMATE_VALUE   = 999;
+    constexpr int CHECK_VALUE       = 0.1;
+
+    // return huge score for checkmate, small bonus for non-checkmate check
+    if (kingInCheck(clrToMove)) {
+        if ((getPlayerPieces(clrToMove)).empty()) {
+            return clrToMove == WHITE ? -CHECKMATE_VALUE : CHECKMATE_VALUE;
+        } else {
+            return clrToMove == WHITE ? -CHECK_VALUE     : CHECK_VALUE;
+        }
+    }
+
+    // score white pieces
+    for (const SquarePiecePair& whiteMovePair : whitePieces) {
+        
+        piece  = whiteMovePair.second;
+        score += PIECE_VALUES[piece->getPieceType()];
+        
+    }
+    
+    // score black pieces
+    for (const SquarePiecePair& blackMovePair : blackPieces) {
+        
+        piece  = blackMovePair.second;
+        score -= PIECE_VALUES[piece->getPieceType()];
+
+    }
+    
+    return score;
 }

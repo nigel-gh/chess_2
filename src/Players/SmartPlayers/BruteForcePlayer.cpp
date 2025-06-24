@@ -37,7 +37,7 @@ const Action BruteForcePlayer::chooseAction(const MoveSet* possibleMoves, const 
         boardClone->applyMove(move, clr);
         
         if (maxSearchDepth <= 1) {                  // leaf node
-            moveScore = evaluateBoardScore(boardClone);
+            moveScore = boardClone->evaluateLeafPositionScore(clr);
         } else {                                    // recursion
             moveScore = getMoveScoreRecursively(2, boardClone, getOppositeColour(clr), &DEBUGGING_numNodesSearched);
         }
@@ -72,7 +72,7 @@ int BruteForcePlayer::getMoveScoreRecursively(int depth, Board* board, Colour cl
         board->applyMove(move, clr);
         
         if (depth >= maxSearchDepth) {              // leaf node
-            moveScore = evaluateBoardScore(board);
+            moveScore = board->evaluateLeafPositionScore(clr);
         } else {                                    // recursion
             moveScore = getMoveScoreRecursively(depth + 1, board, getOppositeColour(clr), DEBUGGING_numNodesSearched);
         }
@@ -89,29 +89,45 @@ int BruteForcePlayer::getMoveScoreRecursively(int depth, Board* board, Colour cl
 
 }
 
-// higher score     = more helpful for white
-// negative score   = more helpful for black
-int BruteForcePlayer::evaluateBoardScore(Board* board) const {
+// // higher score     = more helpful for white
+// // negative score   = more helpful for black
+// int BruteForcePlayer::evaluateBoardScore(Board* board, Colour clrToMove) const {
     
-    int score = 0;
-    const Piece* piece;
-    int sign;
+//     int          score = 0;
+//     const Piece* piece;
+//     SquarePiecePairSet& whitePieces = board->getPlayerPieces(WHITE);
+//     SquarePiecePairSet& blackPieces = board->getPlayerPieces(BLACK);
+
+//     constexpr int CHECKMATE_VALUE   = 999;
+//     constexpr int CHECK_VALUE       = 0.1;
+
+//     // return huge score for checkmate, small bonus for non-checkmate check
+//     if (board->kingInCheck(clrToMove)) {
+//         if ((board->getPlayerPieces(clrToMove)).empty()) {
+//             return clrToMove == WHITE ? -CHECKMATE_VALUE : CHECKMATE_VALUE;
+//         } else {
+//             return clrToMove == WHITE ? -CHECK_VALUE     : CHECK_VALUE;
+//         }
+//     }
+
+//     // score white pieces
+//     for (const SquarePiecePair& whiteMovePair : whitePieces) {
+        
+//         piece  = whiteMovePair.second;
+//         score += PIECE_VALUES[piece->getPieceType()];
+        
+//     }
     
-    for (int i = 0; i < NUM_SQUARES_ON_BOARD; i++) {
+//     // score black pieces
+//     for (const SquarePiecePair& blackMovePair : blackPieces) {
         
-        piece = board->getPieceAtPos(i);
-        
-        if (piece == nullptr) {
-            continue;
-        }
-        
-        sign = - 1 * (piece->getColour() * 2 - 1);
-        score += PIECE_VALUES[piece->getPieceType()] * sign;
-        
-    }
+//         piece  = blackMovePair.second;
+//         score -= PIECE_VALUES[piece->getPieceType()];
+
+//     }
     
-    return score;
-}
+//     return score;
+// }
 
 Player* BruteForcePlayer::clone() const {
     return new BruteForcePlayer(getColour(), maxSearchDepth);

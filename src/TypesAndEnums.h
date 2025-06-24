@@ -90,7 +90,7 @@ enum PieceType {
 };
 std::string pieceTypeToString(PieceType);
 
-constexpr int PIECE_VALUES[7] = {1, 5, 3, 3, 999, 9, 0};
+constexpr int PIECE_VALUES[7] = {1, 5, 3, 3, 0, 9, 0};
 
 // GameOverReason and GameStatus
 enum GameOverReason {
