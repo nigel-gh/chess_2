@@ -21,7 +21,7 @@ private:
     int alphaBetaMin(int, int, int, Board*, Colour, Move*) const;
     int alphaBetaMax(int, int, int, Board*, Colour, Move*) const;
     int alphaBeta(int, int, int, Board*, Colour, int*) const;
-    int evaluateBoardScore(Board*, Colour) const;
+    // int evaluateBoardScore(Board*, Colour) const;
 public:
     ABPlayer();
     ABPlayer(Colour);

@@ -65,7 +65,7 @@ int ABPlayer::alphaBeta(int alpha, int beta, int depthRemaining, Board* board, C
     int         score;
     int         bestScore   = EVAL_MIN_SCORE;
     MoveSet*    moves       = board->calcLegalMoves(playerClr);
-    if ( depthRemaining == 0 ) return evaluateBoardScore(board, playerClr);
+    if ( depthRemaining == 0 ) return board->evaluateLeafPositionScore(playerClr);
 
 
     for (Move* move : moves->getMoves())  {
