@@ -1,6 +1,9 @@
 // ZobristHash.h
 
+
 /*
+    PURPOSE: Track how many times a given position has occured.
+
     A behind-the-scenes special hash to count how many times a board position has occured before.
     Required for 3-fold repetition game over condition.
     Index is a game state.
@@ -38,7 +41,7 @@ private:
     unsigned long long zobristTable[NUM_ZOBRIST_PIECES][NUM_ZOBRIST_SQUARES];  // Look-up table to get 64 bit code for a piece of a color on a square.
     unsigned long long currentPostitionHashKey;
     std::unordered_map<unsigned long long, int> positionFrequencyHash;
-    static unsigned long long getRandom64Bits();
+    static unsigned long long getRandom64BitsSlow();
     void populateZobristLut();
     void initializeHashWithStartingPosition();
     constexpr unsigned char getZobristIndexOfPiece(Colour, PieceType);

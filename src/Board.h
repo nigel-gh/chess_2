@@ -30,7 +30,7 @@ private:
    unsigned int   fiftyMoveRuleStack[MAX_NUM_MOVES_IN_GAME];
    BoardPieceMap* pieceAtSquareMap; // hash where key is board index, value is list of pieces that exist there or have been captured
    MoveStack      moveStack;
-   // CStack<bool, 512> whiteKingInCheckStack;
+   // CStack<bool, 512> whiteKingInCheckStack; // UNIMPLEMENTED.
    // CStack<bool, 512> blackKingInCheckStack;
    void        setKingPos(Colour, int);
    void        incrementFiftyMoveRuleCounter();

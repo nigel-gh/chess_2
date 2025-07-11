@@ -19,17 +19,27 @@ void ZobristHash::populateZobristLut() {
     int row, col;
     for (row = 0; row < NUM_ZOBRIST_PIECES; row++) {
         for (col = 0; col < NUM_ZOBRIST_SQUARES; col++) {
-            zobristTable[row][col] = getRandom64Bits();
+            zobristTable[row][col] = getRandom64BitsSlow();
         }
     }
 }
 
-unsigned long long ZobristHash::getRandom64Bits() {
-    std::random_device rd;
-    std::mt19937_64 e2(rd());
-    std::uniform_int_distribution<unsigned long long> dist(std::llround(std::pow(2,61)));
-    return dist(e2);
+// Slow because all numbers are created using the random_device.
+// This is fine because we're only using this for initalization of the ZobHash.
+// NOTE: the random_device{}() behaved randomly on linux, but deterministically on windows.
+// Thank you random numbers for not being random, but being random sometimes, and confusing always.
+unsigned long long ZobristHash::getRandom64BitsSlow() {
+
+    static std::mt19937_64 gen(std::random_device{}());
+    static std::uniform_int_distribution<unsigned long long> dist(
+        0, std::numeric_limits<unsigned long long>::max()
+    );
+    unsigned long long val = dist(gen);
+    std::cout << "value: \"" << val << "\"\n";
+    return val;
+
 }
+
 
 void ZobristHash::hashZobristPiece(Colour colour, PieceType type, int square) {
     int zobristIndex = getZobristIndexOfPiece(colour, type);

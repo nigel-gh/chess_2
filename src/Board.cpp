@@ -1,5 +1,11 @@
 // Board.cpp
 
+#include <string>
+#include <random>
+#include <iostream>
+#include <bitset>
+#include <algorithm>
+
 #include "Board.h"
 #include "Players/Player.h"
 #include "ZobristHash.h"
@@ -9,12 +15,6 @@
 #include "Pieces/PieceAccessibleSquares.h"
 #include "TypesAndEnums.h"
 
-#include <string>
-#include <random>
-#include <iostream>
-#include <bitset>
-#include <algorithm>
-
 Board::Board() {
     enpassantSquare = RESET_ENPASSANT_SQUARE;
     numMovesPlayed  = 0;
@@ -22,19 +22,16 @@ Board::Board() {
     whiteKingPos    = WHITE_KING_START_SQUARE;
     blackKingPos    = BLACK_KING_START_SQUARE;
     pieceAtSquareMap = new BoardPieceMap();
-
 }
 
 void Board::display(const MoveSet* legalMoves, Colour clrToMove) const {
 
-    
     std::string kingInCheckStr = kingInCheck(clrToMove) ? "true" : "false";
     std::string leftPadding = "   ";
     std::string rowSeparator = "  --- --- --- --- --- --- --- ---\n";
     std::string namePadding = "                  ";
     std::string guiString    = "\n ___________________________________________\n";
     guiString               += "/                                           \\\n";
-    
     guiString += namePadding + "black\n";
     guiString += "      a   b   c   d   e   f   g   h\n";
     guiString += leftPadding + rowSeparator + leftPadding + "8";
@@ -88,21 +85,13 @@ MoveSet* Board::calcLegalMoves(Colour colour) {
     return legalMoves;
 }
 
-const int Board::getEnpassantSquare() const {
-    return enpassantSquare;
-}
+const int Board::getEnpassantSquare()           const   { return enpassantSquare; }
 
-void Board::setEnpassantSquare(int sqr) {
-    enpassantSquare = sqr;
-}
+void Board::setEnpassantSquare(int sqr)                 { enpassantSquare = sqr; }
 
-const Piece* Board::getPieceAtPos(int position) const {
-    return pieceAtSquareMap->getPieceAtPos(position);
-}
+const Piece* Board::getPieceAtPos(int position) const   { return pieceAtSquareMap->getPieceAtPos(position); }
 
-int Board::getKingPos(Colour _colour) const {
-    return _colour == WHITE ? whiteKingPos : blackKingPos;
-}
+int Board::getKingPos(Colour _colour)           const   { return _colour == WHITE ? whiteKingPos : blackKingPos; }
 
 void Board::setKingPos(Colour _colour, int pos) {
     if (_colour == WHITE) {
@@ -162,7 +151,6 @@ GameStatus Board::applyMove(const Move* move, Colour playerColour) {
     if (move->moveIsCastle()) {
         pieceAtSquareMap->moveActivePiece(castleRookPosBefore, castleRookPosAfter);
     }
-    
 
     // Set enpassent square
     enpassantSquare = move->getEnpassentSquareAfter();
