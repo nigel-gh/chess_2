@@ -9,8 +9,7 @@
 
 int main() {
 
-    // Game game = Game(new RandomPlayer(WHITE), new ABPlayer(BLACK, 2));
-    Game game = Game(new ABPlayer(WHITE, 2), new RandomPlayer(BLACK));
+    Game game = Game(new ABPlayer(WHITE, 4), new RandomPlayer(BLACK));
     game.play();
     
     return 0;

@@ -18,8 +18,8 @@ constexpr int EVAL_MIN_SCORE = -999999;
 class ABPlayer : public Player {
 private:
     int maxSearchDepth;
-    int alphaBetaMin(int, int, int, Board*, Colour, Move*) const;
-    int alphaBetaMax(int, int, int, Board*, Colour, Move*) const;
+    // int alphaBetaMin(int, int, int, Board*, Colour, Move*) const;
+    // int alphaBetaMax(int, int, int, Board*, Colour, Move*) const;
     int alphaBeta(int, int, int, Board*, Colour, int*) const;
     // int evaluateBoardScore(Board*, Colour) const;
 public:

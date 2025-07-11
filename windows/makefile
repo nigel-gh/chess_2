@@ -29,6 +29,9 @@ SOURCE = $(SRC_DIR)/main.cpp \
          $(PLAYERS_DIR)/Player.cpp \
          $(SRC_DIR)/Game.cpp \
          $(PLAYERS_DIR)/DummyPlayer.cpp \
+         $(PLAYERS_DIR)/RandomPlayer.cpp \
+         $(SMART_PLAYERS_DIR)/BruteForcePlayer.cpp \
+         $(SMART_PLAYERS_DIR)/AlphaBetaPlayer.cpp \
          $(SRC_DIR)/Board.cpp \
          $(PIECES_DIR)/Piece.cpp \
          $(SRC_DIR)/Move.cpp \
@@ -40,9 +43,6 @@ SOURCE = $(SRC_DIR)/main.cpp \
          $(PIECES_DIR)/Queen.cpp \
          $(PIECES_DIR)/Pawn.cpp \
          $(SRC_DIR)/TypesAndEnums.cpp \
-         $(PLAYERS_DIR)/RandomPlayer.cpp \
-         $(SMART_PLAYERS_DIR)/BruteForcePlayer.cpp \
-         $(SMART_PLAYERS_DIR)/AlphaBetaPlayer.cpp
 
 OUT     = chessgame
 CC      = g++

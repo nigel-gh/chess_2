@@ -12,6 +12,7 @@ OBJS = $(OBJ_DIR)/main.o \
        $(OBJ_DIR)/DummyPlayer.o \
        $(OBJ_DIR)/RandomPlayer.o \
        $(OBJ_DIR)/BruteForcePlayer.o \
+       $(OBJ_DIR)/AlphaBetaPlayer.o \
        $(OBJ_DIR)/Board.o \
        $(OBJ_DIR)/Piece.o \
        $(OBJ_DIR)/Move.o \
